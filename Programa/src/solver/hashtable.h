@@ -9,21 +9,15 @@
 typedef struct node Node;
 typedef struct hashtable HashTable;
 
-const int INIT_SIZE = 2 << 5;
-const double LOAD_FACTOR = 0.75;
+// const int INIT_SIZE = 2 << 5;
+// const double LOAD_FACTOR = 0.75;
 
 
 typedef enum
 {
-    DJB2
+    DJB2,
+    SUM
 } HashFunction;
-
-
-const char * hash_func_to_str(HashFunction func)
-{
-    static const char *strings[] = { "djb2" };
-    return strings[func];
-}
 
 
 struct node
@@ -45,17 +39,21 @@ struct hashtable
     Node **nodes;
     Node *empty;
     int *collision_counter;
+    int arr_sz;
 };
 
+const char * hash_func_to_str(HashFunction func);
 
 Node * init_node(int *item);
-HashTable * init_hashtable(int max, int nb_slots, double load, HashFunction hash);
+HashTable * init_hashtable(int max, int nb_slots, double load, HashFunction hash, int arr_sz);
 
 void node_destroy(Node *node);
 void hashtable_destroy(HashTable *table);
 
-unsigned long hash(int *item, HashFunction func);
+unsigned long hash(int *item, HashFunction func, int m);
 void hashtable_insert(int *item, HashTable *table);
-int * hashtable_get(int *item, HashTable *table);
+Node * hashtable_get(unsigned long key, HashTable *table);
 void hashtable_delete(int *item, HashTable *table);
-HashTable * hashtable_reha
+void hashtable_print(HashTable *table);
+
+void hashtable_assert(HashTable *table);
