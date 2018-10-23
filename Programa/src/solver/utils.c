@@ -35,3 +35,10 @@ void int_array_print(int *arr, int sz)
 
     printf("]");
 }
+
+
+void int_array_println(int *arr, int sz)
+{
+    int_array_print(arr, sz);
+    printf("\n");
+}
