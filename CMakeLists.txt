@@ -9,9 +9,11 @@ set(TEST_ROOT Programa/tests/solver)
 include_directories(${ROOT})
 
 add_library(Hashtable ${ROOT}/hashtable.c)
+add_library(Utils ${ROOT}/utils.c)
 
 add_executable(main ${ROOT}/main.c)
 
 # test files
 add_executable(test-hashtable ${TEST_ROOT}/test_hashtable.c)
 target_link_libraries(test-hashtable Hashtable)
+target_link_libraries(test-hashtable Utils)

@@ -3,6 +3,7 @@
 //
 
 #include "hashtable.h"
+#include "utils.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <stdbool.h>
@@ -174,7 +175,34 @@ void hashtable_insert(int *item, HashTable *table)
 
 int * hashtable_get(int *item, HashTable *table)
 {
+    unsigned long hcode = hash(item, table->hash);
+    unsigned long index = hcode % table->nb_slots;
 
+    Node *node = table->nodes[index];
+    int *result = NULL;
+
+    if (node != NULL)
+    {
+        bool equal = int_array_equal(item, node->item, item[0]);
+
+        while (node->next != NULL && !equal)
+        {
+            node = node->next;
+            equal = int_array_equal(item, node->item, item[0]);
+        }
+
+        if (equal)
+        {
+            result = node->item;
+        }
+    }
+
+    if (result == NULL)
+    {
+        perror("Item not in table");
+    }
+
+    return result;
 }
 
 
