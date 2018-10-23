@@ -3,6 +3,7 @@
 //
 
 #include "utils.h"
+#include <stdio.h>
 
 
 bool int_array_equal(int *a0, int *a1, int sz)
@@ -15,4 +16,20 @@ bool int_array_equal(int *a0, int *a1, int sz)
     }
 
     return equal;
+}
+
+
+void int_array_print(int *arr, int sz)
+{
+    for (int i = 0; i < sz; ++i)
+    {
+        if (i > 0)
+        {
+            printf(", ");
+        }
+
+        printf("%d", arr[i]);
+    }
+
+    printf("\n");
 }
