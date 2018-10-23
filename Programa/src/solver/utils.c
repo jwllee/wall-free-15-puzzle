@@ -21,6 +21,8 @@ bool int_array_equal(int *a0, int *a1, int sz)
 
 void int_array_print(int *arr, int sz)
 {
+    printf("[");
+
     for (int i = 0; i < sz; ++i)
     {
         if (i > 0)
@@ -31,5 +33,5 @@ void int_array_print(int *arr, int sz)
         printf("%d", arr[i]);
     }
 
-    printf("\n");
+    printf("]");
 }
