@@ -10,6 +10,7 @@ include_directories(${ROOT})
 
 add_library(Hashtable ${ROOT}/hashtable.c)
 add_library(Utils ${ROOT}/utils.c)
+add_library(State ${ROOT}/state.c)
 
 add_executable(main ${ROOT}/main.c)
 
