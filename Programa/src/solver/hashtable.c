@@ -48,7 +48,7 @@ unsigned long djb2(int *arr, int sz, int m)
 
 const char * hash_func_to_str(HashFunction func)
 {
-    static const char *strings[] = { "djb2" };
+    static const char *strings[] = { "djb2", "sum" };
     return strings[func];
 }
 
