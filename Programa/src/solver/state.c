@@ -163,6 +163,116 @@ bool is_visited(int *record)
 }
 
 
+int get_empty_space_index(int *record)
+{
+    int size = record[0], index = -1;
+
+    for (int i = 0; i < size; ++i)
+    {
+        index = record[i + 1] == 0 ? i + 1 : index;
+    }
+
+    if (index < 0)
+    {
+        printf("Cannot find index of empty space.\n");
+        exit(1);
+    }
+
+    return index;
+}
+
+
+void shift_tile(int from, int to, int *record)
+{
+    if (record[to] != 0)
+    {
+        printf("Shifted tile destination %d is not empty.\n", record[to]);
+        exit(1);
+    }
+
+    record[to] = record[from];
+    record[from] = 0;
+}
+
+
+int * record_copy(int *record)
+{
+    int state_size = record[0];
+    int total_size = state_size + 6;
+    int *copy = malloc(total_size * sizeof(int));
+    memcpy(copy, record, total_size * sizeof(int));
+    return copy;
+}
+
+
+int * get_neighbor(int *record, int size, int *empty_xy, Direction dir)
+{
+    int *from_xy, from_ind, empty_ind, aux;
+    int *neighbor;
+
+    empty_ind = xy_to_index(empty_xy[0], empty_xy[1], size);
+    from_xy = malloc(2 * sizeof(int));
+
+    switch (dir)
+    {
+        case TOP:
+            aux = get_adj_num(empty_xy[1], -1, size);
+            from_xy[0] = empty_xy[0];
+            from_xy[1] = aux;
+            break;
+        case BOTTOM:
+            aux = get_adj_num(empty_xy[1], 1, size);
+            from_xy[0] = empty_xy[0];
+            from_xy[1] = aux;
+            break;
+        case LEFT:
+            aux = get_adj_num(empty_xy[0], -1, size);
+            from_xy[0] = aux;
+            from_xy[1] = empty_xy[1];
+            break;
+        case RIGHT:
+            aux = get_adj_num(empty_xy[0], 1, size);
+            from_xy[0] = aux;
+            from_xy[1] = empty_xy[1];
+            break;
+        default:
+            printf("Do not recognize direction enum: %d.\n", dir);
+            exit(1);
+    }
+
+    // int_array_println(from_xy, 2);
+
+    from_ind = xy_to_index(from_xy[0], from_xy[1], size);
+    neighbor = record_copy(record);
+    shift_tile(from_ind, empty_ind, &neighbor[1]);
+
+    free(from_xy);
+
+    return neighbor;
+}
+
+
+int ** get_neighbor_states(int *record, int size)
+{
+    int ** neighbors = malloc(4 * sizeof(int *));
+    int empty_ind = get_empty_space_index(record) - 1;
+    int *empty_xy = index_to_xy(empty_ind, size);
+
+    // printf("Empty index: %d\n", empty_ind);
+    // printf("Empty xy: ");
+    // int_array_println(empty_xy, 2);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        neighbors[i] = get_neighbor(record, size, empty_xy, TOP + i);
+    }
+
+    free(empty_xy);
+
+    return neighbors;
+}
+
+
 void record_print(int *record)
 {
     printf("size: %d, state: ", get_state_size(record));
@@ -172,4 +282,26 @@ void record_print(int *record)
             get_y(record),
             get_g_cost(record),
             get_h_cost(record));
+}
+
+
+void board_print(int *record, int size)
+{
+    int index, val;
+
+    for (int i = 0; i < size; ++i)
+    {
+        index = i * size + 1;
+        val = record[index];
+        printf("%2d", val);
+
+        for (int j = 1; j < size; ++j)
+        {
+            ++index;
+            val = record[index];
+            printf(" %2d", val);
+        }
+
+        printf("\n");
+    }
 }

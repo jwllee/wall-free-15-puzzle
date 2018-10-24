@@ -18,6 +18,15 @@
 // is_visited: if this state is in the closed or open set
 
 
+typedef enum
+{
+    TOP,
+    BOTTOM,
+    LEFT,
+    RIGHT
+} Direction;
+
+
 int compute_h_cost(int size, int *record);
 int * create_record(int size, int *state);
 
@@ -34,4 +43,11 @@ int get_g_cost(int *record);
 int get_h_cost(int *record);
 bool is_visited(int *record);
 
+int get_empty_space_index(int *record);
+void shift_tile(int from, int to, int *record);
+int * get_neighbor(int *record, int size, int *empty_xy, Direction dir);
+int ** get_neighbor_states(int *record, int size);
+
+int * record_copy(int *record);
 void record_print(int *record);
+void board_print(int *record, int size);
