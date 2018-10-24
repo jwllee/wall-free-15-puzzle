@@ -18,3 +18,7 @@ add_executable(main ${ROOT}/main.c)
 add_executable(test-hashtable ${TEST_ROOT}/test_hashtable.c)
 target_link_libraries(test-hashtable Hashtable)
 target_link_libraries(test-hashtable Utils)
+
+add_executable(test-state ${TEST_ROOT}/test_state.c)
+target_link_libraries(test-state State)
+target_link_libraries(test-state Utils)
