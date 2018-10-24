@@ -4,6 +4,7 @@
 
 #include "utils.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 
 bool int_array_equal(int *a0, int *a1, int sz)
@@ -42,3 +43,36 @@ void int_array_println(int *arr, int sz)
     int_array_print(arr, sz);
     printf("\n");
 }
+
+
+int * index_to_xy(int index, int size)
+{
+    int *xy = malloc(2 * sizeof(int));
+    xy[0] = index % size;
+    xy[1] = index / size;
+    return xy;
+}
+
+
+int xy_to_index(int x, int y, int size)
+{
+    return y * size + x;
+}
+
+
+int get_adj_num(int i, int dir, int size)
+{
+    int adj = i + dir;
+
+    if (adj < 0)
+    {
+        adj = size - 1;
+    }
+    else if (adj >= size)
+    {
+        adj = 0;
+    }
+
+    return adj;
+}
+
