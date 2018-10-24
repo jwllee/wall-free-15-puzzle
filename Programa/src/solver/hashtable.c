@@ -201,6 +201,7 @@ void hashtable_insert(int *item, HashTable *table)
     }
 
     ++table->size;
+    ++table->slot_counter[hcode];
 
     int limit = (int) (table->max * table->load_factor);
     if (table->size >= limit)
@@ -256,6 +257,7 @@ void hashtable_delete(int *item, HashTable *table)
             table->empty->prev = node;
             table->empty = node;
             --table->size;
+            --table->slot_counter[hcode];
             break;
         }
         else
