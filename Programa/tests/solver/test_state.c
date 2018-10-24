@@ -44,7 +44,9 @@ int main(int argc, char *argv[])
     for (int i = 0; i < 4; ++i)
     {
         printf("\nNeighbor %d\n", i);
-        board_print(neighbors[i], size);
+        // board_print(neighbors[i], size);
+        record_print(neighbors[i]);
+        assert_is_neighbor(record, neighbors[i], size);
     }
 
     // free memories
