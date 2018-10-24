@@ -10,7 +10,7 @@
 
 int main(int argc, char *argv[])
 {
-    const char *fp = "Programa/tests/3x3/test0.txt";
+    const char *fp = "Programa/tests/4x4/test0.txt";
     FILE *file = fopen(fp, "r");
 
     int size;
@@ -36,6 +36,16 @@ int main(int argc, char *argv[])
     int *record = create_record(size, start);
 
     record_print(record);
+    printf("\nStart state:\n");
+    board_print(record, size);
+
+    int **neighbors = get_neighbor_states(record, size);
+
+    for (int i = 0; i < 4; ++i)
+    {
+        printf("\nNeighbor %d\n", i);
+        board_print(neighbors[i], size);
+    }
 
     // free memories
     fclose(file);
