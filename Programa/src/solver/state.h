@@ -51,3 +51,5 @@ int ** get_neighbor_states(int *record, int size);
 int * record_copy(int *record);
 void record_print(int *record);
 void board_print(int *record, int size);
+
+void assert_is_neighbor(int *r0, int *r1, int size);

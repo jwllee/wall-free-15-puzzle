@@ -317,3 +317,86 @@ void board_print(int *record, int size)
         printf("\n");
     }
 }
+
+
+void assert_is_neighbor(int *r0, int *r1, int size)
+{
+    if (r0[0] != r1[0])
+    {
+        printf("Array lengths %d != %d.\n", r0[0], r1[0]);
+        exit(1);
+    }
+
+    int size0 = get_state_size(r0);
+    int size1 = get_state_size(r1);
+    if (size0 != size1)
+    {
+        printf("State size %d != %d.\n", size0, size1);
+        exit(1);
+    }
+
+    int diff = 0;
+    for (int i = 0; i < size0; ++i)
+    {
+        if (r0[i + 1] != r1[i + 1])
+        {
+            ++diff;
+        }
+    }
+
+    if (diff != 2)
+    {
+        printf("There are %d differences. Should be exactly 2.\n", diff);
+        printf("From: \n");
+        board_print(r0, size);
+        printf("\nTo: \n");
+        board_print(r1, size);
+        exit(1);
+    }
+
+    int empty_ind_0 = get_empty_space_index(r0) - 1;
+    int empty_ind_1 = get_empty_space_index(r1) - 1;
+    int *empty_xy_0 = index_to_xy(empty_ind_0, size);
+    int *empty_xy_1 = index_to_xy(empty_ind_1, size);
+
+    int x = get_x(r1);
+    int y = get_y(r1);
+
+    int tile_ind_0 = xy_to_index(empty_xy_1[0], empty_xy_1[1], size);
+    int tile_ind_1 = xy_to_index(empty_xy_0[0], empty_xy_0[1], size);
+
+    int tile_0 = r0[tile_ind_0 + 1];
+    int tile_1 = r1[tile_ind_1 + 1];
+
+    if (x != empty_xy_0[0] || y != empty_xy_0[1])
+    {
+        printf("Previous tile position x: %d, y: %d "
+               "is wrong in neighbor x: %d, y: %d.\n", empty_xy_0[0], empty_xy_0[1], x, y);
+        printf("From: \n");
+        board_print(r0, size);
+        printf("\nTo: \n");
+        board_print(r1, size);
+        exit(1);
+    }
+
+    if (tile_0 != tile_1)
+    {
+        printf("Moved tile value should match: %d != %d.\n", tile_0, tile_1);
+        printf("From: \n");
+        board_print(r0, size);
+        printf("\nTo: \n");
+        board_print(r1, size);
+    }
+
+    int g0 = get_g_cost(r0);
+    int g1 = get_g_cost(r1);
+
+    if (g1 != g0 + 1)
+    {
+        printf("Neighbor g cost: %d != %d + 1.\n", g1, g0);
+        exit(1);
+    }
+
+    free(empty_xy_0);
+    free(empty_xy_1);
+}
