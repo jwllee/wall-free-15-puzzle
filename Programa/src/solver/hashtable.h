@@ -38,7 +38,7 @@ struct hashtable
     // list of node pointers
     Node **nodes;
     Node *empty;
-    int *collision_counter;
+    int *slot_counter;
     int arr_sz;
 };
 

@@ -72,14 +72,14 @@ HashTable * init_hashtable(int max, int nb_slots, double load, HashFunction hash
     table->load_factor = load;
     table->hash = hash;
     table->nodes = malloc(nb_slots * sizeof(Node *));
-    table->collision_counter = malloc(nb_slots * sizeof(int));
+    table->slot_counter = malloc(nb_slots * sizeof(int));
     table->empty = init_node(NULL);
     table->arr_sz = arr_sz;
 
     for (int i = 0; i < nb_slots; ++i)
     {
         table->nodes[i] = NULL;
-        table->collision_counter[i] = -1;
+        table->slot_counter[i] = 0;
 
     }
 
@@ -128,7 +128,7 @@ void hashtable_destroy(HashTable *table)
     }
 
     free(table->nodes);
-    free(table->collision_counter);
+    free(table->slot_counter);
     free(table);
 }
 
@@ -304,8 +304,9 @@ void hashtable_assert(HashTable *table)
     // - size
     // - hashcodes
     // - under load factor
+    // - slot counter
 
-    int cnt = 0;
+    int cnt = 0, slot_cnt, slot_i;
     Node *node;
     int *item;
     unsigned long hcode;
@@ -313,6 +314,9 @@ void hashtable_assert(HashTable *table)
     for (int i = 0; i < table->nb_slots; ++i)
     {
         node = table->nodes[i];
+        slot_cnt = 0;
+        slot_i = table->slot_counter[i];
+
         while (node != NULL)
         {
             item = node->item;
@@ -326,13 +330,20 @@ void hashtable_assert(HashTable *table)
 
             node = node->next;
             ++cnt;
+            ++slot_cnt;
+        }
+
+        if (slot_cnt != slot_i)
+        {
+            printf("Slot counter at slot %d: %d != %d (expected).\n", i, slot_i, slot_cnt);
+            exit(1);
         }
     }
 
     if (cnt != table->size)
     {
         printf("Hashtable size: %d != number of items: %d.\n", table->size, cnt);
-        exit(2);
+        exit(1);
     }
 
     double cur_load = table->size * 1.0 / table->max;
