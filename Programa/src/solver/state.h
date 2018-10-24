@@ -42,6 +42,7 @@ int get_y(int *record);
 int get_g_cost(int *record);
 int get_h_cost(int *record);
 bool is_visited(int *record);
+bool state_equal(int *r0, int *r1);
 
 int get_empty_space_index(int *record);
 void shift_tile(int from, int to, int *record);
