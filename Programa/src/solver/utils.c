@@ -112,3 +112,18 @@ unsigned long djb2(int *arr, int sz, int m)
 
     return hash;
 }
+
+
+const char * hash_func_to_str(Hash hash)
+{
+    switch (hash)
+    {
+        case DJB2:
+            return "djb2";
+        case SUM:
+            return "sum";
+        default:
+            printf("Do not recognize hash type: %d.\n", hash);
+            exit(1);
+    }
+}

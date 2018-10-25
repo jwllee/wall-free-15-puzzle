@@ -9,13 +9,6 @@
 #include <stdbool.h>
 
 
-const char * hash_func_to_str(HashFunction func)
-{
-    static const char *strings[] = { "djb2", "sum" };
-    return strings[func];
-}
-
-
 Node * init_node(int *item)
 {
     Node *node = malloc(sizeof(Node));
@@ -26,7 +19,7 @@ Node * init_node(int *item)
 }
 
 
-HashTable * init_hashtable(int max, int n_slots, double load, HashFunction hash, int item_size)
+HashTable * init_hashtable(int max, int n_slots, double load, Hash hash, int item_size)
 {
     HashTable *table = malloc(sizeof(HashTable));
     table->nb_slots = n_slots;
@@ -122,7 +115,7 @@ void hashtable_rehash(HashTable *table)
 }
 
 
-unsigned long hash(int *item, HashFunction func, int m)
+unsigned long hash(int *item, Hash func, int m)
 {
     unsigned long hash;
     switch (func)

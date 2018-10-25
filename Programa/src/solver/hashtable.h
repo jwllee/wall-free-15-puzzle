@@ -5,19 +5,13 @@
 #pragma once
 
 #include <stdbool.h>
+#include "utils.h"
 
 typedef struct node Node;
 typedef struct hashtable HashTable;
 
 // const int INIT_SIZE = 2 << 5;
 // const double LOAD_FACTOR = 0.75;
-
-
-typedef enum
-{
-    DJB2,
-    SUM
-} HashFunction;
 
 
 struct node
@@ -34,7 +28,7 @@ struct hashtable
     int nb_slots;
     int size;
     double load_factor;
-    HashFunction hash;
+    Hash hash;
     // list of node pointers
     Node **nodes;
     Node *empty;
@@ -42,15 +36,14 @@ struct hashtable
     int arr_sz;
 };
 
-const char * hash_func_to_str(HashFunction func);
 
 Node * init_node(int *item);
-HashTable * init_hashtable(int max, int n_slots, double load, HashFunction hash, int item_size);
+HashTable * init_hashtable(int max, int n_slots, double load, Hash hash, int item_size);
 
 void node_destroy(Node *node, bool destroy_item);
 void hashtable_destroy(HashTable *table, bool destroy_item);
 
-unsigned long hash(int *item, HashFunction func, int m);
+unsigned long hash(int *item, Hash func, int m);
 void hashtable_insert(int *item, HashTable *table);
 Node * hashtable_get(unsigned long key, HashTable *table);
 void hashtable_delete(int *item, HashTable *table);
