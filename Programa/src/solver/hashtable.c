@@ -90,15 +90,17 @@ void hashtable_destroy(HashTable *table, bool destroy_item)
 }
 
 
-void hashtable_rehash(HashTable *table)
+void hashtable_rehash(HashTable **table)
 {
-    int new_max = table->max << 2;
-    int new_n_slots = table->n_slots << 2;
+    HashTable *table_ptr = *table;
+    int new_max = table_ptr->max << 1;
+    int new_n_slots = table_ptr->n_slots << 1;
 
-    HashTable *old_table = table;
+    HashTable *old_table = *table;
 
     // point to new table
-    table = init_hashtable(new_max, new_n_slots, table->load_factor, table->compar, table->hash);
+    *table = init_hashtable(new_max, new_n_slots, table_ptr->load_factor,
+            table_ptr->compar, table_ptr->hash);
 
     Node *node;
     for (int i = 0; i < old_table->n_slots; ++i)
@@ -116,17 +118,25 @@ void hashtable_rehash(HashTable *table)
 }
 
 
-void hashtable_insert(int *item, HashTable *table)
+void hashtable_insert(int *item, HashTable **table)
 {
-    unsigned long hcode = table->hash(item, table->n_slots);
+    HashTable *table_ptr = *table;
+    int limit = (int) (table_ptr->max * table_ptr->load_factor);
+    if (table_ptr->size >= limit)
+    {
+        hashtable_rehash(table);
+        table_ptr = *table;
+    }
+
+    unsigned long hcode = table_ptr->hash(item, table_ptr->n_slots);
     // unsigned long index = hcode % table->n_slots;
 
-    Node *new_node = table->empty, *node;
+    Node *new_node = table_ptr->empty, *node;
 
-    node = table->nodes[hcode];
-    table->empty = table->empty->next;
+    node = table_ptr->nodes[hcode];
+    table_ptr->empty = table_ptr->empty->next;
 
-    table->nodes[hcode] = new_node;
+    table_ptr->nodes[hcode] = new_node;
     new_node->item = item;
     new_node->next = node;
 
@@ -135,14 +145,8 @@ void hashtable_insert(int *item, HashTable *table)
         node->prev = new_node;
     }
 
-    ++table->size;
-    ++table->slot_counter[hcode];
-
-    int limit = (int) (table->max * table->load_factor);
-    if (table->size >= limit)
-    {
-        hashtable_rehash(table);
-    }
+    ++table_ptr->size;
+    ++table_ptr->slot_counter[hcode];
 }
 
 
