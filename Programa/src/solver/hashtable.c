@@ -146,6 +146,28 @@ void hashtable_insert(int *item, HashTable *table)
 }
 
 
+bool hashtable_contains(int *item, HashTable *table)
+{
+    unsigned long index = table->hash(item, table->n_slots);
+
+    Node *node = table->nodes[index];
+    bool contains = false;
+
+    // loop invariant:
+    // - have not found an item equal to item
+    // - node contains something and is not NULL
+    // At termination:
+    // We either have found the item or we have looked through all items in the linked list.
+    while (!contains && node != NULL)
+    {
+        contains = table->compar(item, node->item);
+        node = node->next;
+    }
+
+    return contains;
+}
+
+
 Node * hashtable_get(unsigned long key, HashTable *table)
 {
     unsigned long index = key % table->n_slots;
