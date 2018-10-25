@@ -9,6 +9,18 @@
 #include "hashtable.h"
 
 
+bool is_equal(int *a0, int *a1)
+{
+    return int_array_equal(a0, a1, 2);
+}
+
+
+unsigned long hash(int *arr, int m)
+{
+    return sum(&arr[1], 1, m);
+}
+
+
 int main(int argc, char *argv[])
 {
     printf("Testing hashtable...\n");
@@ -49,10 +61,10 @@ int main(int argc, char *argv[])
 
         data[i] = arr;
         printf("Read in: ");
-        int_array_print(arr, arr_sz);
+        int_array_println(arr, arr_sz);
     }
 
-    HashTable *table = init_hashtable(100, m, 1.0, SUM, arr_sz);
+    HashTable *table = init_hashtable(100, m, 1.0, is_equal, hash);
 
     printf("\nEmpty hashtable:\n");
     hashtable_print(table);
@@ -63,28 +75,28 @@ int main(int argc, char *argv[])
     {
         item = data[i];
         hashtable_insert(item, table);
+        hashtable_assert(table);
     }
 
     printf("\nFilled hashtable:\n");
     hashtable_print(table);
 
     // delete 10
-    hashtable_delete(data[0], table);
+    hashtable_delete(data[1], table);
     printf("\nDelete 10\n");
     hashtable_print(table);
+    free(data[1]);
 
     // delete 3
     hashtable_delete(data[4], table);
     printf("\nDelete 3\n");
     hashtable_print(table);
+    free(data[4]);
 
     hashtable_assert(table);
 
     // free memory
-    for (int i = 0; i < n_data; ++i)
-    {
-        free(data[i]);
-    }
+    hashtable_destroy(table, true);
     free(data);
     fclose(file);
 
