@@ -47,8 +47,8 @@ const char * hash_func_to_str(HashFunction func);
 Node * init_node(int *item);
 HashTable * init_hashtable(int max, int nb_slots, double load, HashFunction hash, int arr_sz);
 
-void node_destroy(Node *node);
-void hashtable_destroy(HashTable *table);
+void node_destroy(Node *node, bool destroy_item);
+void hashtable_destroy(HashTable *table, bool destroy_item);
 
 unsigned long hash(int *item, HashFunction func, int m);
 void hashtable_insert(int *item, HashTable *table);

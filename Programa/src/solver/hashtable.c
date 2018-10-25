@@ -95,15 +95,15 @@ HashTable * init_hashtable(int max, int nb_slots, double load, HashFunction hash
 }
 
 
-void node_destroy(Node *node)
+void node_destroy(Node *node, bool destroy_item)
 {
-    if (node->item != NULL)
+    if (node->item != NULL && destroy_item)
         free(node->item);
     free(node);
 }
 
 
-void hashtable_destroy(HashTable *table)
+void hashtable_destroy(HashTable *table, bool destroy_item)
 {
     Node *node, *tmp;
     for (int i = 0; i < table->nb_slots; ++i)
@@ -114,7 +114,7 @@ void hashtable_destroy(HashTable *table)
             tmp = node;
             node = node->next;
 
-            node_destroy(tmp);
+            node_destroy(tmp, destroy_item);
         }
     }
 
@@ -124,7 +124,7 @@ void hashtable_destroy(HashTable *table)
         tmp = table->empty;
         table->empty = tmp->next;
 
-        node_destroy(tmp);
+        node_destroy(tmp, destroy_item);
     }
 
     free(table->nodes);
@@ -155,7 +155,7 @@ void hashtable_rehash(HashTable *table)
         }
     }
 
-    hashtable_destroy(old_table);
+    hashtable_destroy(old_table, false);
 }
 
 
