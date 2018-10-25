@@ -183,6 +183,30 @@ bool state_equal(int *r0, int *r1)
 
     return equal;
 }
+
+
+unsigned long hash(int *record, Hash hash, int m)
+{
+    unsigned long hcode;
+    int s = get_state_size(record);
+
+    switch (hash)
+    {
+        case DJB2:
+            hcode = djb2(&record[1], s, m);
+            break;
+        case SUM:
+            hcode = sum(&record[1], s, m);
+            break;
+        default:
+            printf("Do not recognize hash function %s.\n", hash_func_to_str(hash));
+            exit(1);
+    }
+
+    return hcode;
+}
+
+
 int get_empty_space_index(int *record)
 {
     int size = record[0], index = -1;
