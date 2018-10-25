@@ -52,6 +52,7 @@ int * get_neighbor(int *record, int size, int *empty_xy, Direction dir);
 int ** get_neighbor_states(int *record, int size);
 
 int * record_copy(int *record);
+bool record_equal(int *r0, int *r1);
 void record_print(int *record);
 void board_print(int *record, int size);
 

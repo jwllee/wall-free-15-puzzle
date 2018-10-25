@@ -249,6 +249,12 @@ int * record_copy(int *record)
 }
 
 
+bool record_equal(int *r0, int *r1)
+{
+    return r0[0] == r1[0] && int_array_equal(r0, r1, r0[0]);
+}
+
+
 int * get_neighbor(int *record, int size, int *empty_xy, Direction dir)
 {
     int *from_xy, from_ind, empty_ind, aux;
