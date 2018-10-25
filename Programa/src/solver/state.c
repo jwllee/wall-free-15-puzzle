@@ -163,6 +163,26 @@ bool is_visited(int *record)
 }
 
 
+bool state_equal(int *r0, int *r1)
+{
+    int s0 = get_state_size(r0);
+    int s1 = get_state_size(r1);
+
+    if (s0 != s1)
+    {
+        printf("State size %d != %d.\n", s0, s1);
+        exit(1);
+    }
+
+    bool equal = true;
+
+    for (int i = 0; i < s0; ++i)
+    {
+        equal = equal && (r0[i + 1] == r1[i + 1]);
+    }
+
+    return equal;
+}
 int get_empty_space_index(int *record)
 {
     int size = record[0], index = -1;
