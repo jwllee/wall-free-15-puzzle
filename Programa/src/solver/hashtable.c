@@ -22,25 +22,25 @@ Node * init_node(int *item)
 HashTable * init_hashtable(int max, int n_slots, double load,
         bool(*compar)(int *, int *), unsigned long(*hash)(int *, int))
 {
-    HashTable *table = malloc(sizeof(HashTable));
-    table->n_slots = n_slots;
-    table->max = max;
-    table->size = 0;
-    table->load_factor = load;
-    table->compar = compar;
-    table->hash = hash;
-    table->nodes = malloc(n_slots * sizeof(Node *));
-    table->slot_counter = malloc(n_slots * sizeof(int));
-    table->empty = init_node(NULL);
+    HashTable *table_p = malloc(sizeof(HashTable));
+    table_p->n_slots = n_slots;
+    table_p->max = max;
+    table_p->size = 0;
+    table_p->load_factor = load;
+    table_p->compar = compar;
+    table_p->hash = hash;
+    table_p->nodes = malloc(n_slots * sizeof(Node *));
+    table_p->slot_counter = malloc(n_slots * sizeof(int));
+    table_p->empty = init_node(NULL);
 
     for (int i = 0; i < n_slots; ++i)
     {
-        table->nodes[i] = NULL;
-        table->slot_counter[i] = 0;
+        table_p->nodes[i] = NULL;
+        table_p->slot_counter[i] = 0;
 
     }
 
-    Node *cur = table->empty;
+    Node *cur = table_p->empty;
     int limit = (int) (max * load);
     for (int i = 0; i < limit; ++i)
     {
@@ -48,7 +48,7 @@ HashTable * init_hashtable(int max, int n_slots, double load,
         cur = cur->next;
     }
 
-    return table;
+    return table_p;
 }
 
 
@@ -60,12 +60,12 @@ void node_destroy(Node *node, bool destroy_item)
 }
 
 
-void hashtable_destroy(HashTable *table, bool destroy_item)
+void hashtable_destroy(HashTable *table_p, bool destroy_item)
 {
     Node *node, *tmp;
-    for (int i = 0; i < table->n_slots; ++i)
+    for (int i = 0; i < table_p->n_slots; ++i)
     {
-        node = table->nodes[i];
+        node = table_p->nodes[i];
         while (node != NULL)
         {
             tmp = node;
@@ -75,32 +75,32 @@ void hashtable_destroy(HashTable *table, bool destroy_item)
         }
     }
 
-    int empty_slots = (int) (table->max * table->load_factor) - table->size + 1;
+    int empty_slots = (int) (table_p->max * table_p->load_factor) - table_p->size + 1;
     while (empty_slots-- > 0)
     {
-        tmp = table->empty;
-        table->empty = tmp->next;
+        tmp = table_p->empty;
+        table_p->empty = tmp->next;
 
         node_destroy(tmp, destroy_item);
     }
 
-    free(table->nodes);
-    free(table->slot_counter);
-    free(table);
+    free(table_p->nodes);
+    free(table_p->slot_counter);
+    free(table_p);
 }
 
 
-void hashtable_rehash(HashTable **table)
+void hashtable_rehash(HashTable **table_pp)
 {
-    HashTable *table_ptr = *table;
-    int new_max = table_ptr->max << 1;
-    int new_n_slots = table_ptr->n_slots << 1;
+    HashTable *table_p = *table_pp;
+    int new_max = table_p->max << 1;
+    int new_n_slots = table_p->n_slots << 1;
 
-    HashTable *old_table = *table;
+    HashTable *old_table = table_p;
 
     // point to new table
-    *table = init_hashtable(new_max, new_n_slots, table_ptr->load_factor,
-            table_ptr->compar, table_ptr->hash);
+    *table_pp = init_hashtable(new_max, new_n_slots, table_p->load_factor,
+            table_p->compar, table_p->hash);
 
     Node *node;
     for (int i = 0; i < old_table->n_slots; ++i)
@@ -108,7 +108,7 @@ void hashtable_rehash(HashTable **table)
         node = old_table->nodes[i];
         while (node != NULL)
         {
-            hashtable_insert(node->item, table);
+            hashtable_insert(node->item, table_pp);
             node->item = NULL;
             node = node->next;
         }
@@ -118,25 +118,25 @@ void hashtable_rehash(HashTable **table)
 }
 
 
-void hashtable_insert(int *item, HashTable **table)
+void hashtable_insert(int *item, HashTable **table_pp)
 {
-    HashTable *table_ptr = *table;
-    int limit = (int) (table_ptr->max * table_ptr->load_factor);
-    if (table_ptr->size >= limit)
+    HashTable *table_p = *table_pp;
+    int limit = (int) (table_p->max * table_p->load_factor);
+    if (table_p->size >= limit)
     {
-        hashtable_rehash(table);
-        table_ptr = *table;
+        hashtable_rehash(table_pp);
+        table_p = *table_pp;
     }
 
-    unsigned long hcode = table_ptr->hash(item, table_ptr->n_slots);
+    unsigned long hcode = table_p->hash(item, table_p->n_slots);
     // unsigned long index = hcode % table->n_slots;
 
-    Node *new_node = table_ptr->empty, *node;
+    Node *new_node = table_p->empty, *node;
 
-    node = table_ptr->nodes[hcode];
-    table_ptr->empty = table_ptr->empty->next;
+    node = table_p->nodes[hcode];
+    table_p->empty = table_p->empty->next;
 
-    table_ptr->nodes[hcode] = new_node;
+    table_p->nodes[hcode] = new_node;
     new_node->item = item;
     new_node->next = node;
 
@@ -145,16 +145,16 @@ void hashtable_insert(int *item, HashTable **table)
         node->prev = new_node;
     }
 
-    ++table_ptr->size;
-    ++table_ptr->slot_counter[hcode];
+    ++table_p->size;
+    ++table_p->slot_counter[hcode];
 }
 
 
-bool hashtable_contains(int *item, HashTable *table)
+bool hashtable_contains(int *item, HashTable *table_p)
 {
-    unsigned long index = table->hash(item, table->n_slots);
+    unsigned long index = table_p->hash(item, table_p->n_slots);
 
-    Node *node = table->nodes[index];
+    Node *node = table_p->nodes[index];
     bool contains = false;
 
     // loop invariant:
@@ -164,7 +164,7 @@ bool hashtable_contains(int *item, HashTable *table)
     // We either have found the item or we have looked through all items in the linked list.
     while (!contains && node != NULL)
     {
-        contains = table->compar(item, node->item);
+        contains = table_p->compar(item, node->item);
         node = node->next;
     }
 
@@ -172,33 +172,33 @@ bool hashtable_contains(int *item, HashTable *table)
 }
 
 
-Node * hashtable_get(unsigned long key, HashTable *table)
+Node * hashtable_get(unsigned long key, HashTable *table_p)
 {
-    unsigned long index = key % table->n_slots;
+    unsigned long index = key % table_p->n_slots;
 
-    Node *node = table->nodes[index];
+    Node *node = table_p->nodes[index];
     return node;
 }
 
 
-void hashtable_delete(int *item, HashTable *table)
+void hashtable_delete(int *item, HashTable *table_p)
 {
-    unsigned long hcode = table->hash(item, table->n_slots);
-    Node *node = hashtable_get(hcode, table);
+    unsigned long hcode = table_p->hash(item, table_p->n_slots);
+    Node *node = hashtable_get(hcode, table_p);
 
     bool equal;
 
     int index = 0;
     while (node != NULL)
     {
-        equal = table->compar(item, node->item);
+        equal = table_p->compar(item, node->item);
 
         if (equal)
         {
             // unchain node and put to empty
             if (index == 0)
             {
-                table->nodes[hcode] = node->next;
+                table_p->nodes[hcode] = node->next;
             }
             else
             {
@@ -214,11 +214,11 @@ void hashtable_delete(int *item, HashTable *table)
             node->item = NULL;
             // add empty node back to table's empty nodes
             node->prev = NULL;
-            node->next = table->empty;
-            table->empty->prev = node;
-            table->empty = node;
-            --table->size;
-            --table->slot_counter[hcode];
+            node->next = table_p->empty;
+            table_p->empty->prev = node;
+            table_p->empty = node;
+            --table_p->size;
+            --table_p->slot_counter[hcode];
             break;
         }
         else
@@ -230,14 +230,14 @@ void hashtable_delete(int *item, HashTable *table)
 }
 
 
-void hashtable_print(HashTable *table)
+void hashtable_print(HashTable *table_p)
 {
     unsigned long hcode;
     Node *node;
 
-    for (int i = 0; i < table->n_slots; ++i)
+    for (int i = 0; i < table_p->n_slots; ++i)
     {
-        node = table->nodes[i];
+        node = table_p->nodes[i];
 
         printf("[%i]: ", i);
 
@@ -249,7 +249,7 @@ void hashtable_print(HashTable *table)
               printf(" -> ");
            }
 
-           hcode = table->hash(node->item, -1);
+           hcode = table_p->hash(node->item, -1);
            printf("%ld", hcode);
 
            node = node->next;
@@ -261,7 +261,7 @@ void hashtable_print(HashTable *table)
 }
 
 
-void hashtable_assert(HashTable *table)
+void hashtable_assert(HashTable *table_p)
 {
     // To check:
     // - size
@@ -274,16 +274,16 @@ void hashtable_assert(HashTable *table)
     int *item;
     unsigned long hcode;
 
-    for (int i = 0; i < table->n_slots; ++i)
+    for (int i = 0; i < table_p->n_slots; ++i)
     {
-        node = table->nodes[i];
+        node = table_p->nodes[i];
         slot_cnt = 0;
-        slot_i = table->slot_counter[i];
+        slot_i = table_p->slot_counter[i];
 
         while (node != NULL)
         {
             item = node->item;
-            hcode = table->hash(item, table->n_slots);
+            hcode = table_p->hash(item, table_p->n_slots);
 
             if (hcode != i)
             {
@@ -303,16 +303,16 @@ void hashtable_assert(HashTable *table)
         }
     }
 
-    if (cnt != table->size)
+    if (cnt != table_p->size)
     {
-        printf("Hashtable size: %d != number of items: %d.\n", table->size, cnt);
+        printf("Hashtable size: %d != number of items: %d.\n", table_p->size, cnt);
         exit(1);
     }
 
-    double cur_load = table->size * 1.0 / table->max;
+    double cur_load = table_p->size * 1.0 / table_p->max;
 
-    if (cur_load > table->load_factor)
+    if (cur_load > table_p->load_factor)
     {
-        printf("Hashtable current load %.2f exceeds load factor %.2f.\n", cur_load, table->load_factor);
+        printf("Hashtable current load %.2f exceeds load factor %.2f.\n", cur_load, table_p->load_factor);
     }
 }

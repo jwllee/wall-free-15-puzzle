@@ -43,12 +43,12 @@ HashTable * init_hashtable(int max, int n_slots, double load,
         bool(*compar)(int *, int *), unsigned long(*hash)(int *, int));
 
 void node_destroy(Node *node, bool destroy_item);
-void hashtable_destroy(HashTable *table, bool destroy_item);
+void hashtable_destroy(HashTable *table_p, bool destroy_item);
 
-void hashtable_insert(int *item, HashTable **table);
-bool hashtable_contains(int *item, HashTable *table);
-Node * hashtable_get(unsigned long key, HashTable *table);
-void hashtable_delete(int *item, HashTable *table);
-void hashtable_print(HashTable *table);
+void hashtable_insert(int *item, HashTable **table_pp);
+bool hashtable_contains(int *item, HashTable *table_p);
+Node * hashtable_get(unsigned long key, HashTable *table_p);
+void hashtable_delete(int *item, HashTable *table_p);
+void hashtable_print(HashTable *table_p);
 
-void hashtable_assert(HashTable *table);
+void hashtable_assert(HashTable *table_p);
