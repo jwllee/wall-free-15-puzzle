@@ -25,25 +25,26 @@ struct node
 struct hashtable
 {
     int max;
-    int nb_slots;
+    int n_slots;
     int size;
     double load_factor;
-    Hash hash;
     // list of node pointers
     Node **nodes;
     Node *empty;
     int *slot_counter;
-    int arr_sz;
+
+    bool(*compar)(int *, int *);
+    unsigned long(*hash)(int *, int);
 };
 
 
 Node * init_node(int *item);
-HashTable * init_hashtable(int max, int n_slots, double load, Hash hash, int item_size);
+HashTable * init_hashtable(int max, int n_slots, double load,
+        bool(*compar)(int *, int *), unsigned long(*hash)(int *, int));
 
 void node_destroy(Node *node, bool destroy_item);
 void hashtable_destroy(HashTable *table, bool destroy_item);
 
-unsigned long hash(int *item, Hash func, int m);
 void hashtable_insert(int *item, HashTable *table);
 Node * hashtable_get(unsigned long key, HashTable *table);
 void hashtable_delete(int *item, HashTable *table);

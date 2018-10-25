@@ -19,18 +19,19 @@ Node * init_node(int *item)
 }
 
 
-HashTable * init_hashtable(int max, int n_slots, double load, Hash hash, int item_size)
+HashTable * init_hashtable(int max, int n_slots, double load,
+        bool(*compar)(int *, int *), unsigned long(*hash)(int *, int))
 {
     HashTable *table = malloc(sizeof(HashTable));
-    table->nb_slots = n_slots;
+    table->n_slots = n_slots;
     table->max = max;
     table->size = 0;
     table->load_factor = load;
+    table->compar = compar;
     table->hash = hash;
     table->nodes = malloc(n_slots * sizeof(Node *));
     table->slot_counter = malloc(n_slots * sizeof(int));
     table->empty = init_node(NULL);
-    table->arr_sz = item_size;
 
     for (int i = 0; i < n_slots; ++i)
     {
@@ -62,7 +63,7 @@ void node_destroy(Node *node, bool destroy_item)
 void hashtable_destroy(HashTable *table, bool destroy_item)
 {
     Node *node, *tmp;
-    for (int i = 0; i < table->nb_slots; ++i)
+    for (int i = 0; i < table->n_slots; ++i)
     {
         node = table->nodes[i];
         while (node != NULL)
@@ -92,15 +93,15 @@ void hashtable_destroy(HashTable *table, bool destroy_item)
 void hashtable_rehash(HashTable *table)
 {
     int new_max = table->max << 2;
-    int new_nb_slots = table->nb_slots << 2;
+    int new_n_slots = table->n_slots << 2;
 
     HashTable *old_table = table;
 
     // point to new table
-    table = init_hashtable(new_max, new_nb_slots, table->load_factor, table->hash, table->arr_sz);
+    table = init_hashtable(new_max, new_n_slots, table->load_factor, table->compar, table->hash);
 
     Node *node;
-    for (int i = 0; i < old_table->nb_slots; ++i)
+    for (int i = 0; i < old_table->n_slots; ++i)
     {
         node = old_table->nodes[i];
         while (node != NULL)
@@ -115,32 +116,10 @@ void hashtable_rehash(HashTable *table)
 }
 
 
-unsigned long hash(int *item, Hash func, int m)
-{
-    unsigned long hash;
-    switch (func)
-    {
-        case DJB2:
-            // the number of item's elements to be used for computing the hashcode
-            // is stored at the first index
-            hash = djb2(&item[1], item[0], m);
-            break;
-        case SUM:
-            hash = sum(&item[1], item[0], m);
-            break;
-        default:
-            printf("Do not recognize hash function %s.\n", hash_func_to_str(func));
-            exit(1);
-    }
-
-    return hash;
-}
-
-
 void hashtable_insert(int *item, HashTable *table)
 {
-    unsigned long hcode = hash(item, table->hash, table->nb_slots);
-    // unsigned long index = hcode % table->nb_slots;
+    unsigned long hcode = table->hash(item, table->n_slots);
+    // unsigned long index = hcode % table->n_slots;
 
     Node *new_node = table->empty, *node;
 
@@ -169,7 +148,7 @@ void hashtable_insert(int *item, HashTable *table)
 
 Node * hashtable_get(unsigned long key, HashTable *table)
 {
-    unsigned long index = key % table->nb_slots;
+    unsigned long index = key % table->n_slots;
 
     Node *node = table->nodes[index];
     return node;
@@ -178,7 +157,7 @@ Node * hashtable_get(unsigned long key, HashTable *table)
 
 void hashtable_delete(int *item, HashTable *table)
 {
-    unsigned long hcode = hash(item, table->hash, table->nb_slots);
+    unsigned long hcode = table->hash(item, table->n_slots);
     Node *node = hashtable_get(hcode, table);
 
     bool equal;
@@ -186,7 +165,7 @@ void hashtable_delete(int *item, HashTable *table)
     int index = 0;
     while (node != NULL)
     {
-        equal = int_array_equal(item, node->item, table->arr_sz);
+        equal = table->compar(item, node->item);
 
         if (equal)
         {
@@ -230,7 +209,7 @@ void hashtable_print(HashTable *table)
     unsigned long hcode;
     Node *node;
 
-    for (int i = 0; i < table->nb_slots; ++i)
+    for (int i = 0; i < table->n_slots; ++i)
     {
         node = table->nodes[i];
 
@@ -244,7 +223,7 @@ void hashtable_print(HashTable *table)
               printf(" -> ");
            }
 
-           hcode = hash(node->item, table->hash, -1);
+           hcode = table->hash(node->item, -1);
            printf("%ld", hcode);
 
            node = node->next;
@@ -269,7 +248,7 @@ void hashtable_assert(HashTable *table)
     int *item;
     unsigned long hcode;
 
-    for (int i = 0; i < table->nb_slots; ++i)
+    for (int i = 0; i < table->n_slots; ++i)
     {
         node = table->nodes[i];
         slot_cnt = 0;
@@ -278,7 +257,7 @@ void hashtable_assert(HashTable *table)
         while (node != NULL)
         {
             item = node->item;
-            hcode = hash(item, table->hash, table->nb_slots);
+            hcode = table->hash(item, table->n_slots);
 
             if (hcode != i)
             {
