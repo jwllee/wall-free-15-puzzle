@@ -85,7 +85,6 @@ int main(int argc, char *argv[])
     hashtable_delete(data[1], table);
     printf("\nDelete 10\n");
     hashtable_print(table);
-    free(data[1]);
 
     // delete 3
     hashtable_delete(data[4], table);
@@ -93,10 +92,31 @@ int main(int argc, char *argv[])
     hashtable_print(table);
     free(data[4]);
 
+    printf("Hashtable contains 10: ");
+    if (hashtable_contains(data[1], table))
+    {
+        printf("true.\n");
+    }
+    else
+    {
+        printf("false.\n");
+    }
+
+    printf("Hashtable contains 5: ");
+    if (hashtable_contains(data[0], table))
+    {
+        printf("true.\n");
+    }
+    else
+    {
+        printf("false.\n");
+    }
+
     hashtable_assert(table);
 
     // free memory
     hashtable_destroy(table, true);
+    free(data[1]);
     free(data);
     fclose(file);
 
