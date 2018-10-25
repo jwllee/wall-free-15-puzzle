@@ -64,18 +64,22 @@ int main(int argc, char *argv[])
         int_array_println(arr, arr_sz);
     }
 
-    HashTable *table = init_hashtable(100, m, 1.0, is_equal, hash);
+    HashTable *table = init_hashtable(5, m, 1.0, is_equal, hash);
 
     printf("\nEmpty hashtable:\n");
     hashtable_print(table);
+    printf("\n");
 
     int *item;
     Node *node;
     for (int i = 0; i < n_data; ++i)
     {
         item = data[i];
-        hashtable_insert(item, table);
+        printf("Inserting %d\n", data[i][1]);
+        hashtable_insert(item, &table);
         hashtable_assert(table);
+        hashtable_print(table);
+        printf("\n");
     }
 
     printf("\nFilled hashtable:\n");
