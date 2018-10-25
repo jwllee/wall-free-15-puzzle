@@ -45,7 +45,7 @@ struct hashtable
 const char * hash_func_to_str(HashFunction func);
 
 Node * init_node(int *item);
-HashTable * init_hashtable(int max, int nb_slots, double load, HashFunction hash, int arr_sz);
+HashTable * init_hashtable(int max, int n_slots, double load, HashFunction hash, int item_size);
 
 void node_destroy(Node *node, bool destroy_item);
 void hashtable_destroy(HashTable *table, bool destroy_item);

@@ -63,20 +63,20 @@ Node * init_node(int *item)
 }
 
 
-HashTable * init_hashtable(int max, int nb_slots, double load, HashFunction hash, int arr_sz)
+HashTable * init_hashtable(int max, int n_slots, double load, HashFunction hash, int item_size)
 {
     HashTable *table = malloc(sizeof(HashTable));
-    table->nb_slots = nb_slots;
+    table->nb_slots = n_slots;
     table->max = max;
     table->size = 0;
     table->load_factor = load;
     table->hash = hash;
-    table->nodes = malloc(nb_slots * sizeof(Node *));
-    table->slot_counter = malloc(nb_slots * sizeof(int));
+    table->nodes = malloc(n_slots * sizeof(Node *));
+    table->slot_counter = malloc(n_slots * sizeof(int));
     table->empty = init_node(NULL);
-    table->arr_sz = arr_sz;
+    table->arr_sz = item_size;
 
-    for (int i = 0; i < nb_slots; ++i)
+    for (int i = 0; i < n_slots; ++i)
     {
         table->nodes[i] = NULL;
         table->slot_counter[i] = 0;
