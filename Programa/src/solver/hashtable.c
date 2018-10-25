@@ -9,43 +9,6 @@
 #include <stdbool.h>
 
 
-unsigned long sum(int *arr, int sz, int m)
-{
-    unsigned long hash = 0;
-
-    for (int i = 0; i < sz; ++i)
-    {
-        hash = (hash + arr[i]);
-
-        if (m > 0)
-        {
-            hash = hash % m;
-        }
-    }
-
-    return hash;
-}
-
-
-unsigned long djb2(int *arr, int sz, int m)
-{
-    unsigned long hash = 5381;
-
-    for (int i = 0; i < sz; ++i)
-    {
-        // hash * 33 + arr[i]
-        hash = ((hash << 5) + hash) + arr[i];
-
-        if (m > 0)
-        {
-            hash = hash % m;
-        }
-    }
-
-    return hash;
-}
-
-
 const char * hash_func_to_str(HashFunction func)
 {
     static const char *strings[] = { "djb2", "sum" };

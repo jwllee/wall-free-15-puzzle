@@ -15,3 +15,6 @@ int * index_to_xy(int index, int size);
 int xy_to_index(int x, int y, int size);
 int get_adj_num(int i, int dir, int size);
 
+unsigned long sum(int *arr, int size, int m);
+unsigned long djb2(int *arr, int size, int m);
+
