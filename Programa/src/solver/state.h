@@ -58,5 +58,6 @@ bool record_state_equal(int *r0, int *r1);
 bool record_state_ordered(int *record);
 void record_print(int *record);
 void board_print(int *record, int size);
+void state_print(int *state, int size);
 
 void assert_is_neighbor(int *r0, int *r1, int size);

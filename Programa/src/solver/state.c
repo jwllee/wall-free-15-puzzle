@@ -412,6 +412,28 @@ void board_print(int *record, int size)
 }
 
 
+void state_print(int *state, int size)
+{
+    int index, val;
+
+    for (int i = 0; i < size; ++i)
+    {
+        index = i * size;
+        val = state[index];
+        printf("%2d", val);
+
+        for (int j = 1; j < size; ++j)
+        {
+            ++index;
+            val = state[index];
+            printf(" %2d", val);
+        }
+
+        printf("\n");
+    }
+}
+
+
 void assert_is_neighbor(int *r0, int *r1, int size)
 {
     if (r0[0] != r1[0])
