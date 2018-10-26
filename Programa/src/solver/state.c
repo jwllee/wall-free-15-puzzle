@@ -174,6 +174,12 @@ int get_h_cost(int *record)
 }
 
 
+int get_f_cost(int *record)
+{
+    return get_g_cost(record) + get_h_cost(record);
+}
+
+
 bool is_visited(int *record)
 {
     int size = get_state_size(record);

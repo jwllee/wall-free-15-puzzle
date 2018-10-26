@@ -44,6 +44,7 @@ int get_x(int *record);
 int get_y(int *record);
 int get_g_cost(int *record);
 int get_h_cost(int *record);
+int get_f_cost(int *record);
 bool is_visited(int *record);
 unsigned long hash(int *record, Hash hash, int m);
 
