@@ -8,3 +8,4 @@
 
 
 int * astar(int *start, int size, HashBackedPriorityQueue *queue);
+int ** get_solution(int *end_record, int size, HashBackedPriorityQueue *queue, bool(*compar)(int *, int *));

@@ -94,3 +94,49 @@ int * astar(int *start, int size, HashBackedPriorityQueue *queue)
 
     return record;
 }
+
+
+int ** get_solution(int *end_record, int size, HashBackedPriorityQueue *queue, bool(*compar)(int *, int *))
+{
+    int solution_size = get_g_cost(end_record);
+    int ** solution = malloc(solution_size * sizeof(int *));
+    int x, y, *aux, *cur_record, zero_ind, *zero_xy;
+
+    // backtrack from end state to start state
+    cur_record = end_record;
+    for (int i = solution_size - 1; i >= 0; --i)
+    {
+        // put solution x, y into solution
+        zero_ind = get_empty_space_index(cur_record) - 1;
+        zero_xy = index_to_xy(zero_ind, size);
+
+        solution[i] = malloc(2 * sizeof(int));
+        solution[i][0] = zero_xy[0];
+        solution[i][1] = zero_xy[1];
+
+        aux = record_get_parent(cur_record, size);
+        cur_record = pq_get(aux, queue, compar);
+
+        if (cur_record == NULL)
+        {
+            printf("Cannot retrieve ancestor record.\n");
+            exit(1);
+        }
+
+        // printf("\n%d, %d\n", zero_xy[0], zero_xy[1]);
+        // board_print(aux, size);
+
+        free(zero_xy);
+        free(aux);
+    }
+
+    x = get_x(cur_record);
+    y = get_y(cur_record);
+    if (x != -1 || y != -1)
+    {
+        printf("Start state should have -1 at x and y, x: %d, y: %d\n", x, y);
+        exit(1);
+    }
+
+    return solution;
+}

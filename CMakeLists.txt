@@ -34,3 +34,6 @@ target_link_libraries(test-puzzle Utils)
 target_link_libraries(test-puzzle Queue)
 target_link_libraries(test-puzzle Hashtable)
 target_link_libraries(test-puzzle Puzzle)
+
+add_executable(test-ground ${TEST_ROOT}/test_ground.c)
+target_link_libraries(test-ground Utils)
