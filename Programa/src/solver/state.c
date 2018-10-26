@@ -163,7 +163,7 @@ bool is_visited(int *record)
 }
 
 
-bool state_equal(int *r0, int *r1)
+bool record_state_equal(int *r0, int *r1)
 {
     int s0 = get_state_size(r0);
     int s1 = get_state_size(r1);

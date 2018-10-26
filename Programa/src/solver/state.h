@@ -43,7 +43,6 @@ int get_y(int *record);
 int get_g_cost(int *record);
 int get_h_cost(int *record);
 bool is_visited(int *record);
-bool state_equal(int *r0, int *r1);
 unsigned long hash(int *record, Hash hash, int m);
 
 int get_empty_space_index(int *record);
@@ -53,6 +52,7 @@ int ** get_neighbor_states(int *record, int size);
 
 int * record_copy(int *record);
 bool record_equal(int *r0, int *r1);
+bool record_state_equal(int *r0, int *r1);
 void record_print(int *record);
 void board_print(int *record, int size);
 
