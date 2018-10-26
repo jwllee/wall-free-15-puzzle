@@ -46,6 +46,7 @@ int get_g_cost(int *record);
 int get_h_cost(int *record);
 int get_f_cost(int *record);
 bool is_visited(int *record);
+int * get_parent_state(int *record, int size);
 unsigned long hash(int *record, Hash hash, int m);
 
 int get_empty_space_index(int *record);

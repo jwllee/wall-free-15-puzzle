@@ -187,6 +187,28 @@ bool is_visited(int *record)
 }
 
 
+int * get_parent_state(int *record, int size)
+{
+    int state_size, x, y, index, zero_index, *state, aux;
+    state = get_state(record);
+    state_size = get_state_size(record);
+    x = get_x(record);
+    y = get_y(record);
+    index = xy_to_index(x, y, size);
+    // record[0] has state size
+    zero_index = get_empty_space_index(record) - 1;
+
+    int *parent_state = malloc(state_size * sizeof(int));
+    memcpy(parent_state, state, state_size * sizeof(int));
+
+    // swap index and zero index value
+    parent_state[zero_index] = state[index];
+    parent_state[index] = 0;
+
+    return parent_state;
+}
+
+
 bool record_state_equal(int *r0, int *r1)
 {
     int s0 = get_state_size(r0);
