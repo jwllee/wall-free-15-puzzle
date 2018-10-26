@@ -68,8 +68,21 @@ int main(int argc, char *argv[])
         printf("End record is NULL.\n");
     }
 
-    printf("No. queued states: %d\n", pq_size(queue));
-    // hashtable_print(queue->items);
+    printf("No. queued states: %d\n\n", pq_size(queue));
+
+    int steps = get_g_cost(end_record);
+    int **solution = get_solution(end_record, size, queue, record_state_equal);
+
+    printf("Solution: %d steps\n", steps);
+    for (int i = 0; i < steps; ++i)
+    {
+        printf("%d: ", i);
+        int_array_println(solution[i], 2);
+        free(solution[i]);
+    }
+    free(solution);
+    free(start);
+    pq_destroy(queue, true);
 
     return 0;
 }
