@@ -4,6 +4,8 @@
 
 #include "queue.h"
 #include "state.h"
+#include "hashtable.h"
+#include "utils.h"
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -169,6 +171,13 @@ void pq_add(int *item, HashBackedPriorityQueue *pq_p)
 {
     heap_add(item, &pq_p->heap, &pq_p->heap_size, &pq_p->arr_size, pq_p->get_priority);
     hashtable_insert(item, &pq_p->items);
+}
+
+
+int * pq_get(int *item, HashBackedPriorityQueue *pq_p, bool(*compar)(int *, int *))
+{
+    Node *node = hashtable_get(item, pq_p->items, compar);
+    return node == NULL ? NULL : node->item;
 }
 
 
