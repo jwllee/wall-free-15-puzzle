@@ -55,6 +55,7 @@ int ** get_neighbor_states(int *record, int size);
 int * record_copy(int *record);
 bool record_equal(int *r0, int *r1);
 bool record_state_equal(int *r0, int *r1);
+bool record_state_ordered(int *record);
 void record_print(int *record);
 void board_print(int *record, int size);
 

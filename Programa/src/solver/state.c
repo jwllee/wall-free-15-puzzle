@@ -273,6 +273,29 @@ bool record_equal(int *r0, int *r1)
 }
 
 
+bool record_state_ordered(int *record)
+{
+    int size = get_state_size(record);
+    int *state = get_state(record);
+    bool ordered = true;
+
+    for (int i = 0; i < size; ++i)
+    {
+        if (i < size - 1)
+        {
+            ordered = ordered && state[i] == i + 1;
+        }
+        else
+        {
+            // last tile is empty
+            ordered = ordered && state[i] == 0;
+        }
+    }
+
+    return ordered;
+}
+
+
 int * get_neighbor(int *record, int size, int *empty_xy, Direction dir)
 {
     int *from_xy, from_ind, empty_ind, aux;
