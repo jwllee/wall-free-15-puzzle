@@ -10,10 +10,10 @@
 
 
 HashBackedPriorityQueue * pq_init(int max, int n_slots, double load,
-        int(*get_key)(int *), bool(*compar)(int *, int *), unsigned long(*hash)(int *, int))
+        int(*get_key)(int *), unsigned long(*hash)(int *, int))
 {
     HashBackedPriorityQueue *pq = malloc(sizeof(HashBackedPriorityQueue));
-    pq->items = init_hashtable(max, n_slots, load, compar, hash);
+    pq->items = init_hashtable(max, n_slots, load, hash);
     pq->arr_size = max;
     pq->heap_size = 0;
     pq->heap = malloc(max * sizeof(int *));
@@ -172,9 +172,9 @@ void pq_add(int *item, HashBackedPriorityQueue *pq_p)
 }
 
 
-bool pq_contains(int *item, HashBackedPriorityQueue *pq_p)
+bool pq_contains(int *item, HashBackedPriorityQueue *pq_p, bool(*compar)(int *, int *))
 {
-    return hashtable_contains(item, pq_p->items);
+    return hashtable_contains(item, pq_p->items, compar);
 }
 
 

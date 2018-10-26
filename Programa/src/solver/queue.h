@@ -23,12 +23,11 @@ struct hash_backed_priority_queue
 
 HashBackedPriorityQueue * pq_init(int max, int n_slots, double load,
         int(*get_key)(int *),
-        bool(*compar)(int *, int *),
         unsigned long(*hash)(int *, int));
 void pq_destroy(HashBackedPriorityQueue *pq_p, bool destroy_item);
 
 void pq_add(int *item, HashBackedPriorityQueue *pq_p);
-bool pq_contains(int *item, HashBackedPriorityQueue *pq_p);
+bool pq_contains(int *item, HashBackedPriorityQueue *pq_p, bool(*compar)(int *, int *));
 int * pq_peek(HashBackedPriorityQueue *pq_p);
 int * pq_poll(HashBackedPriorityQueue *pq_p);
 int pq_size(HashBackedPriorityQueue *pq_p);
