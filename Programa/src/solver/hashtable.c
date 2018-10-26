@@ -19,15 +19,13 @@ Node * init_node(int *item)
 }
 
 
-HashTable * init_hashtable(int max, int n_slots, double load,
-        bool(*compar)(int *, int *), unsigned long(*hash)(int *, int))
+HashTable * init_hashtable(int max, int n_slots, double load, unsigned long(*hash)(int *, int))
 {
     HashTable *table_p = malloc(sizeof(HashTable));
     table_p->n_slots = n_slots;
     table_p->max = max;
     table_p->size = 0;
     table_p->load_factor = load;
-    table_p->compar = compar;
     table_p->hash = hash;
     table_p->nodes = malloc(n_slots * sizeof(Node *));
     table_p->slot_counter = malloc(n_slots * sizeof(int));
@@ -99,8 +97,7 @@ void hashtable_rehash(HashTable **table_pp)
     HashTable *old_table = table_p;
 
     // point to new table
-    *table_pp = init_hashtable(new_max, new_n_slots, table_p->load_factor,
-            table_p->compar, table_p->hash);
+    *table_pp = init_hashtable(new_max, new_n_slots, table_p->load_factor, table_p->hash);
 
     Node *node;
     for (int i = 0; i < old_table->n_slots; ++i)
@@ -150,7 +147,7 @@ void hashtable_insert(int *item, HashTable **table_pp)
 }
 
 
-bool hashtable_contains(int *item, HashTable *table_p)
+bool hashtable_contains(int *item, HashTable *table_p, bool(*compar)(int *, int *))
 {
     unsigned long index = table_p->hash(item, table_p->n_slots);
 
@@ -164,7 +161,7 @@ bool hashtable_contains(int *item, HashTable *table_p)
     // We either have found the item or we have looked through all items in the linked list.
     while (!contains && node != NULL)
     {
-        contains = table_p->compar(item, node->item);
+        contains = compar(item, node->item);
         node = node->next;
     }
 
@@ -172,61 +169,65 @@ bool hashtable_contains(int *item, HashTable *table_p)
 }
 
 
-Node * hashtable_get(unsigned long key, HashTable *table_p)
+Node * hashtable_get(int *item, HashTable *table_p, bool(*compar)(int *, int *))
 {
-    unsigned long index = key % table_p->n_slots;
+    unsigned long index = table_p->hash(item, table_p->n_slots);
 
     Node *node = table_p->nodes[index];
+    bool equal;
+
+    while (node != NULL)
+    {
+        equal = compar(item, node->item);
+
+        if (equal)
+        {
+            break;
+        }
+
+        node = node->next;
+    }
+
     return node;
 }
 
 
-void hashtable_delete(int *item, HashTable *table_p)
+void hashtable_delete(int *item, HashTable *table_p, bool(*compar)(int *, int *))
 {
     unsigned long hcode = table_p->hash(item, table_p->n_slots);
-    Node *node = hashtable_get(hcode, table_p);
+    Node *node = hashtable_get(item, table_p, compar);
 
-    bool equal;
-
-    int index = 0;
-    while (node != NULL)
+    if (node == NULL)
     {
-        equal = table_p->compar(item, node->item);
+        printf("Item not in hashtable.\n");
+        exit(1);
+    }
 
-        if (equal)
+    // first node in linked list
+    if (node->prev == NULL)
+    {
+        table_p->nodes[hcode] = node->next;
+    }
+    else
+    {
+        node->prev->next = node->next;
+
+        if (node->next != NULL)
         {
-            // unchain node and put to empty
-            if (index == 0)
-            {
-                table_p->nodes[hcode] = node->next;
-            }
-            else
-            {
-                node->prev->next = node->next;
-
-                if (node->next != NULL)
-                {
-                    node->next->prev = node->prev;
-                }
-            }
-
-            // remove item from node
-            node->item = NULL;
-            // add empty node back to table's empty nodes
-            node->prev = NULL;
-            node->next = table_p->empty;
-            table_p->empty->prev = node;
-            table_p->empty = node;
-            --table_p->size;
-            --table_p->slot_counter[hcode];
-            break;
-        }
-        else
-        {
-            node = node->next;
-            ++index;
+            node->next->prev = node->prev;
         }
     }
+
+    // remove item from node
+    node->item = NULL;
+    // add node as empty node back at table's empty nodes
+    node->prev = NULL;
+    node->next = table_p->empty;
+    table_p->empty->prev = node;
+    table_p->empty = node;
+
+    --table_p->size;
+    --table_p->slot_counter[hcode];
 }
 
 

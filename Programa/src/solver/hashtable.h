@@ -33,22 +33,20 @@ struct hashtable
     Node *empty;
     int *slot_counter;
 
-    bool(*compar)(int *, int *);
     unsigned long(*hash)(int *, int);
 };
 
 
 Node * init_node(int *item);
-HashTable * init_hashtable(int max, int n_slots, double load,
-        bool(*compar)(int *, int *), unsigned long(*hash)(int *, int));
+HashTable * init_hashtable(int max, int n_slots, double load, unsigned long(*hash)(int *, int));
 
 void node_destroy(Node *node, bool destroy_item);
 void hashtable_destroy(HashTable *table_p, bool destroy_item);
 
 void hashtable_insert(int *item, HashTable **table_pp);
-bool hashtable_contains(int *item, HashTable *table_p);
-Node * hashtable_get(unsigned long key, HashTable *table_p);
-void hashtable_delete(int *item, HashTable *table_p);
+bool hashtable_contains(int *item, HashTable *table_p, bool(*compar)(int *, int *));
+Node * hashtable_get(int *item, HashTable *table_p, bool(*compar)(int *, int *));
+void hashtable_delete(int *item, HashTable *table_p, bool(*compar)(int *, int *));
 void hashtable_print(HashTable *table_p);
 
 void hashtable_assert(HashTable *table_p);
