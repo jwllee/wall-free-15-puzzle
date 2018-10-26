@@ -404,11 +404,12 @@ void record_print(int *record)
 {
     printf("size: %d, state: ", get_state_size(record));
     int_array_print(&record[1], get_state_size(record));
-    printf(", x: %d, y: %d, g: %d, h: %d\n",
+    printf(", x: %d, y: %d, g: %d, h: %d, visited: %d\n",
             get_x(record),
             get_y(record),
             get_g_cost(record),
-            get_h_cost(record));
+            get_h_cost(record),
+            is_visited(record));
 }
 
 
