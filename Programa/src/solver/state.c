@@ -337,17 +337,19 @@ int * get_neighbor(int *record, int size, int *empty_xy, Direction dir)
     neighbor = record_copy(record);
 
     // need to set the neighbor record information
-    int g_cost = get_g_cost(record) + 1;
-    int h_cost = compute_h_cost(size, neighbor);
     // get the previous empty tile position so you can work out previous state
     int x = empty_xy[0];
     int y = empty_xy[1];
-    set_g_cost(g_cost, neighbor);
-    set_h_cost(h_cost, neighbor);
     set_x(x, neighbor);
     set_y(y, neighbor);
 
     shift_tile(from_ind, empty_ind, &neighbor[1]);
+
+    // update costs
+    int g_cost = get_g_cost(record) + 1;
+    int h_cost = compute_h_cost(size, neighbor);
+    set_g_cost(g_cost, neighbor);
+    set_h_cost(h_cost, neighbor);
 
     free(from_xy);
 
