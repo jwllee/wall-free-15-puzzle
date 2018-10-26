@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
         int_array_println(arr, arr_sz);
     }
 
-    HashTable *table = init_hashtable(5, m, 1.0, is_equal, hash);
+    HashTable *table = init_hashtable(5, m, 1.0, hash);
 
     printf("\nEmpty hashtable:\n");
     hashtable_print(table);
@@ -86,18 +86,18 @@ int main(int argc, char *argv[])
     hashtable_print(table);
 
     // delete 10
-    hashtable_delete(data[1], table);
+    hashtable_delete(data[1], table, is_equal);
     printf("\nDelete 10\n");
     hashtable_print(table);
 
     // delete 3
-    hashtable_delete(data[4], table);
+    hashtable_delete(data[4], table, is_equal);
     printf("\nDelete 3\n");
     hashtable_print(table);
     free(data[4]);
 
     printf("Hashtable contains 10: ");
-    if (hashtable_contains(data[1], table))
+    if (hashtable_contains(data[1], table, is_equal))
     {
         printf("true.\n");
     }
@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
     }
 
     printf("Hashtable contains 5: ");
-    if (hashtable_contains(data[0], table))
+    if (hashtable_contains(data[0], table, is_equal))
     {
         printf("true.\n");
     }
