@@ -78,6 +78,12 @@ int main(int argc, char *argv[])
     fclose(file);
     free(start);
     free(ordered_state);
+    free(record);
+    for (int i = 0; i < 4; ++i)
+    {
+        free(neighbors[i]);
+    }
+    free(neighbors);
 
     return 0;
 }
