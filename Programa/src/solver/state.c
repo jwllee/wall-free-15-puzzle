@@ -273,12 +273,6 @@ int * record_copy(int *record)
 }
 
 
-bool record_equal(int *r0, int *r1)
-{
-    return r0[0] == r1[0] && int_array_equal(r0, r1, r0[0]);
-}
-
-
 bool record_state_ordered(int *record)
 {
     int size = get_state_size(record);
