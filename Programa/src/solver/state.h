@@ -31,12 +31,14 @@ typedef enum
 int compute_h_cost(int size, int *record);
 int * create_record(int size, int *state);
 
+void set_state(int *state, int *record);
 void set_x(int x, int *record);
 void set_y(int y, int *record);
 void set_g_cost(int g, int *record);
 void set_h_cost(int h, int *record);
 void set_visited(bool visited, int *record);
 
+int * get_state(int *record);
 int get_state_size(int *record);
 int get_x(int *record);
 int get_y(int *record);

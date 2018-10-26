@@ -87,6 +87,18 @@ int * create_record(int size, int *state)
 }
 
 
+void set_state(int *state, int *record)
+{
+    int size = get_state_size(record);
+    int *cur_state = get_state(record);
+
+    for (int i = 0; i < size; ++i)
+    {
+        cur_state[i] = state[i];
+    }
+}
+
+
 void set_x(int x, int *record)
 {
     int size = get_state_size(record);
@@ -119,6 +131,12 @@ void set_visited(bool visited, int *record)
 {
     int size = get_state_size(record);
     record[size + 5] = visited ? 1: 0;
+}
+
+
+int * get_state(int *record)
+{
+    return &record[1];
 }
 
 
