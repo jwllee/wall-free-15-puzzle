@@ -10,14 +10,14 @@
 
 
 HashBackedPriorityQueue * pq_init(int max, int n_slots, double load,
-        int(*get_key)(int *), unsigned long(*hash)(int *, int))
+        int(*get_priority)(int *), unsigned long(*hash)(int *, int))
 {
     HashBackedPriorityQueue *pq = malloc(sizeof(HashBackedPriorityQueue));
     pq->items = init_hashtable(max, n_slots, load, hash);
     pq->arr_size = max;
     pq->heap_size = 0;
     pq->heap = malloc(max * sizeof(int *));
-    pq->get_key = get_key;
+    pq->get_priority = get_priority;
     return pq;
 }
 
@@ -167,7 +167,7 @@ void heap_heapify(int **heap, int heap_size, int(*get_key)(int *))
 
 void pq_add(int *item, HashBackedPriorityQueue *pq_p)
 {
-    heap_add(item, &pq_p->heap, &pq_p->heap_size, &pq_p->arr_size, pq_p->get_key);
+    heap_add(item, &pq_p->heap, &pq_p->heap_size, &pq_p->arr_size, pq_p->get_priority);
     hashtable_insert(item, &pq_p->items);
 }
 
@@ -186,7 +186,7 @@ int * pq_peek(HashBackedPriorityQueue *pq_p)
 
 int * pq_poll(HashBackedPriorityQueue *pq_p)
 {
-    return heap_delete(0, pq_p->heap, &pq_p->heap_size, pq_p->get_key);
+    return heap_delete(0, pq_p->heap, &pq_p->heap_size, pq_p->get_priority);
 }
 
 
@@ -199,5 +199,5 @@ int pq_size(HashBackedPriorityQueue *pq_p)
 void pq_update_priority(HashBackedPriorityQueue *pq_p)
 {
     // can improve complexity from O(n) to O(lg n) if we store the item positions in hashtable
-    heap_heapify(pq_p->heap, pq_p->heap_size, pq_p->get_key);
+    heap_heapify(pq_p->heap, pq_p->heap_size, pq_p->get_priority);
 }

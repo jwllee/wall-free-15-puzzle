@@ -17,12 +17,12 @@ struct hash_backed_priority_queue
     int arr_size;
     int heap_size;
 
-    int(*get_key)(int *);
+    int(*get_priority)(int *);
 };
 
 
 HashBackedPriorityQueue * pq_init(int max, int n_slots, double load,
-        int(*get_key)(int *),
+        int(*get_priority)(int *),
         unsigned long(*hash)(int *, int));
 void pq_destroy(HashBackedPriorityQueue *pq_p, bool destroy_item);
 
