@@ -49,9 +49,35 @@ int main(int argc, char *argv[])
         assert_is_neighbor(record, neighbors[i], size);
     }
 
+    int *ordered_state = malloc(size * size * sizeof(int));
+    for (int i = 0; i < size * size; ++i)
+    {
+        if (i < size * size - 1)
+        {
+            ordered_state[i] = i + 1;
+        }
+        else
+        {
+            ordered_state[i] = 0;
+        }
+    }
+
+    printf("Ordered state: ");
+    int_array_println(ordered_state, size * size);
+
+    printf("\nBefore setting ordered state:\n");
+    record_print(record);
+    printf("Record state ordered: %d\n", record_state_ordered(record));
+
+    set_state(ordered_state, record);
+    printf("\nAfter setting ordered state:\n");
+    record_print(record);
+    printf("Record state ordered: %d\n", record_state_ordered(record));
+
     // free memories
     fclose(file);
     free(start);
+    free(ordered_state);
 
     return 0;
 }
