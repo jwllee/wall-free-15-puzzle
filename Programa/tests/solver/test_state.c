@@ -40,6 +40,7 @@ int main(int argc, char *argv[])
     board_print(record, size);
 
     int **neighbors = get_neighbor_states(record, size);
+    int *parent_state;
 
     for (int i = 0; i < 4; ++i)
     {
@@ -47,6 +48,21 @@ int main(int argc, char *argv[])
         // board_print(neighbors[i], size);
         record_print(neighbors[i]);
         assert_is_neighbor(record, neighbors[i], size);
+
+        // printf("Parent state:\n");
+        parent_state = get_parent_state(neighbors[i], size);
+        // state_print(parent_state, size);
+
+        if (int_array_equal(parent_state, get_state(record), get_state_size(record)))
+        {
+            printf("Correct parent state.\n");
+        }
+        else
+        {
+            printf("Wrong parent state.\n");
+        }
+
+        free(parent_state);
     }
 
     int *ordered_state = malloc(size * size * sizeof(int));
