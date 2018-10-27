@@ -15,6 +15,11 @@ add_library(Queue ${ROOT}/queue.c)
 add_library(Puzzle ${ROOT}/puzzle.c)
 
 add_executable(main ${ROOT}/main.c)
+target_link_libraries(main State)
+target_link_libraries(main Utils)
+target_link_libraries(main Queue)
+target_link_libraries(main Hashtable)
+target_link_libraries(main Puzzle)
 
 # test files
 add_executable(test-hashtable ${TEST_ROOT}/test_hashtable.c)
@@ -34,6 +39,3 @@ target_link_libraries(test-puzzle Utils)
 target_link_libraries(test-puzzle Queue)
 target_link_libraries(test-puzzle Hashtable)
 target_link_libraries(test-puzzle Puzzle)
-
-add_executable(test-ground ${TEST_ROOT}/test_ground.c)
-target_link_libraries(test-ground Utils)
