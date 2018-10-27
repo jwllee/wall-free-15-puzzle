@@ -12,7 +12,7 @@
 
 unsigned long get_hash(int *record, int m)
 {
-    return hash(record, DJB2, m);
+    return hash(record, ADDITION, m);
 }
 
 
@@ -43,8 +43,8 @@ int main(int argc, char *argv[])
     int max, n_slots;
     double load;
 
-    max = 10;
-    n_slots = 5;
+    max = 20;
+    n_slots = 11;
     load = 0.75;
 
     HashBackedPriorityQueue *queue = pq_init(max, n_slots, load, get_f_cost, get_hash);
@@ -91,6 +91,9 @@ int main(int argc, char *argv[])
         int_array_println(solution[i], 2);
         free(solution[i]);
     }
+
+    hashtable_print(queue->items);
+
     free(solution);
     free(start);
     pq_destroy(queue, true);
