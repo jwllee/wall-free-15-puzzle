@@ -19,10 +19,12 @@ int get_adj_num(int i, int dir, int size);
 typedef enum
 {
     DJB2,
-    SUM
+    SUM,
+    ADDITION
 } Hash;
 
 
 unsigned long sum(int *arr, int size, int m);
 unsigned long djb2(int *arr, int size, int m);
+unsigned long addition_hash(int *arr, int size, int m);
 const char * hash_func_to_str(Hash hash);

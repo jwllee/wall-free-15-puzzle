@@ -114,6 +114,25 @@ unsigned long djb2(int *arr, int sz, int m)
 }
 
 
+// taken from: https://stackoverflow.com/questions/19854564/hash-integer-array
+unsigned long addition_hash(int *arr, int sz, int m)
+{
+    unsigned long hash = 17;
+
+    for (int i = 0; i < sz; ++i)
+    {
+        hash = (hash * 19) + arr[i];
+
+        if (m > 0)
+        {
+            hash = hash % m;
+        }
+    }
+
+    return hash;
+}
+
+
 const char * hash_func_to_str(Hash hash)
 {
     switch (hash)
@@ -122,6 +141,8 @@ const char * hash_func_to_str(Hash hash)
             return "djb2";
         case SUM:
             return "sum";
+        case ADDITION:
+            return "addition";
         default:
             printf("Do not recognize hash type: %d.\n", hash);
             exit(1);

@@ -241,6 +241,9 @@ unsigned long hash(int *record, Hash hash, int m)
         case SUM:
             hcode = sum(&record[1], s, m);
             break;
+        case ADDITION:
+            hcode = addition_hash(&record[1], s, m);
+            break;
         default:
             printf("Do not recognize hash function %s.\n", hash_func_to_str(hash));
             exit(1);
