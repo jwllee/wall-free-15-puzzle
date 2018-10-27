@@ -50,7 +50,7 @@ int * record_get_parent(int *record, int size);
 unsigned long hash(int *record, Hash hash, int m);
 
 int get_empty_space_index(int *record);
-void shift_tile(int from, int to, int *record);
+void move_tile(int from, int to, int *record);
 int * get_neighbor(int *record, int size, int *empty_xy, Direction dir);
 int ** get_neighbor_states(int *record, int size);
 

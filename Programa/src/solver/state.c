@@ -269,7 +269,7 @@ int get_empty_space_index(int *record)
 }
 
 
-void shift_tile(int from, int to, int *record)
+void move_tile(int from, int to, int *record)
 {
     if (record[to] != 0)
     {
@@ -362,7 +362,7 @@ int * get_neighbor(int *record, int size, int *empty_xy, Direction dir)
     set_x(x, neighbor);
     set_y(y, neighbor);
 
-    shift_tile(from_ind, empty_ind, &neighbor[1]);
+    move_tile(from_ind, empty_ind, &neighbor[1]);
 
     // update costs
     int g_cost = get_g_cost(record) + 1;
