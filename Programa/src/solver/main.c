@@ -12,18 +12,20 @@ unsigned long get_hash(int *record, int m)
 
 int main(int argc, char *argv[])
 {
-    if (argc != 3)
+    if (argc != 4)
     {
         printf("Modo de uso: ./solver [test.txt] [output.txt]\n");
         printf("Donde:\n");
         printf("\t[test.txt] es el archivo de input\n");
         printf("\t[output.txt] es el nombre del archivo a escribir con el output\n");
+        printf("\t[hashtable.txt] is to write hashtable counters\n");
     }
 
     FILE *file = fopen(argv[1], "r");
     FILE *output = fopen(argv[2], "w");
+    FILE *hash_count_file = fopen(argv[3], "w");
 
-    if (!file || !output)
+    if (!file || !output || !hash_count_file)
     {
         printf("Error in opening files!\n");
         return 2;
@@ -90,9 +92,16 @@ int main(int argc, char *argv[])
         }
     }
 
+    fprintf(hash_count_file, "%d %d\n", queue->items->n_slots, queue->items->size);
+    for (int i = 0; i < queue->items->n_slots; ++i)
+    {
+        fprintf(hash_count_file, "%d\n", queue->items->slot_counter[i]);
+    }
+
     // free memories
     fclose(file);
     fclose(output);
+    fclose(hash_count_file);
     free(start);
 
     for (int i = 0; i < steps; ++i)
