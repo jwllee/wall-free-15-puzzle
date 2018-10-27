@@ -94,6 +94,12 @@ int main(int argc, char *argv[])
     fclose(file);
     fclose(output);
     free(start);
+
+    for (int i = 0; i < steps; ++i)
+    {
+        free(solution[i]);
+    }
+    
     free(solution);
     pq_destroy(queue, true);
 
