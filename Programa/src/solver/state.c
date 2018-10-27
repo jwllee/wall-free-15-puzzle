@@ -282,6 +282,14 @@ void move_tile(int from, int to, int *record)
 }
 
 
+void shift_tile(int x, int y, int *record, int size)
+{
+    int empty_ind = get_empty_space_index(record) - 1;
+    int index = xy_to_index(x, y, size);
+    move_tile(index, empty_ind, get_state(record));
+}
+
+
 int * record_copy(int *record)
 {
     int state_size = record[0];
