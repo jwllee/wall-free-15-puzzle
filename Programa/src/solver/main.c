@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    fprintf(hash_count_file, "%d %d\n", queue->items->n_slots, queue->items->size);
+    fprintf(hash_count_file, "%d %d %d\n", queue->items->n_slots, queue->items->size, queue->items->n_rehash);
     for (int i = 0; i < queue->items->n_slots; ++i)
     {
         fprintf(hash_count_file, "%d\n", queue->items->slot_counter[i]);
