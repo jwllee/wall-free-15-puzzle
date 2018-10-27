@@ -73,6 +73,17 @@ int main(int argc, char *argv[])
     int steps = get_g_cost(end_record);
     int **solution = get_solution(end_record, size, queue, record_state_equal);
 
+    for (int i = 0; i < steps; ++i)
+    {
+        printf("\n");
+        printf("Step %d: (%d, %d)\n", i, solution[i][0], solution[i][1]);
+        board_print(start_record, size);
+        shift_tile(solution[i][0], solution[i][1], start_record, size);
+        printf("\n");
+        board_print(start_record, size);
+        printf("\n");
+    }
+
     printf("Solution: %d steps\n", steps);
     for (int i = 0; i < steps; ++i)
     {
