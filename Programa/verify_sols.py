@@ -9,7 +9,7 @@ if __name__ == '__main__':
     sol_dir = os.path.join('.', 'tests', 'solutions')
     out_dir = os.path.join('.', 'output')
 
-    for f in out_dir:
+    for f in os.listdir(out_dir):
         if '.txt' not in f:
             continue
 
@@ -17,10 +17,10 @@ if __name__ == '__main__':
         sol_f = os.path.join(sol_dir, f)
 
         with open(out_f, 'r') as f:
-            n_steps_out = int(f.read())
+            n_steps_out = int(f.readline())
 
         with open(sol_f, 'r') as f:
-            n_steps_sol = int(f.read())
+            n_steps_sol = int(f.readline())
 
         if n_steps_out != n_steps_sol:
             print("Output step count does not match solution: {} {}".format(n_steps_out, n_steps_sol))
