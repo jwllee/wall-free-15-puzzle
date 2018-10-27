@@ -32,6 +32,7 @@ struct hashtable
     Node **nodes;
     Node *empty;
     int *slot_counter;
+    int n_rehash;
 
     unsigned long(*hash)(int *, int);
 };

@@ -25,6 +25,7 @@ HashTable * init_hashtable(int max, int n_slots, double load, unsigned long(*has
     table_p->n_slots = n_slots;
     table_p->max = max;
     table_p->size = 0;
+    table_p->n_rehash = 0;
     table_p->load_factor = load;
     table_p->hash = hash;
     table_p->nodes = malloc(n_slots * sizeof(Node *));
@@ -98,6 +99,7 @@ void hashtable_rehash(HashTable **table_pp)
 
     // point to new table
     *table_pp = init_hashtable(new_max, new_n_slots, table_p->load_factor, table_p->hash);
+    (*table_pp)->n_rehash = old_table->n_rehash + 1;
 
     Node *node;
     for (int i = 0; i < old_table->n_slots; ++i)
