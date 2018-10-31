@@ -10,6 +10,16 @@
 
 typedef struct hash_backed_priority_queue HashBackedPriorityQueue;
 
+/**
+ * HashBackedPriorityQueue is a priority queue uses a hashtable to enable O(1) complexity for
+ * checking existence of arbitrary element. This would take O(nlgn) without the queue since the
+ * heap would have to be sorted and then searched using binary search.
+ *
+ * This modified data structure is taken from the Java implementation of the same modified data
+ * structure found in https://svn.win.tue.nl/trac/prom/browser/Packages/Alignment/Trunk/src/nl/tue/alignment/algorithms/datastructures/HashBackedPriorityQueue.java.
+ * However, unlike the Java implementation, update of item priority is not O(1) but O(n) since we
+ * do not maintain the queue position of a record. This decision sacrifices time for memory.
+ */
 struct hash_backed_priority_queue
 {
     HashTable *items;
