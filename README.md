@@ -11,5 +11,8 @@ where ```test.txt``` is the file path to the selected puzzle and ```output.txt``
 
 The output will contain the number of minimum required steps and afterwards the *x*, *y* positions of the pieces to be moved at each step.
 
+### Solution
+The crux of the solution is to use the A* algorithm with a priority queue with a hashtable so that verifying the existence of states takes constant time on average.
+
 ### Notes
 - There is a report in the directory ```Informe``` which contains some analysis of the solution.
